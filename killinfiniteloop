@@ -1,0 +1,25 @@
+#!/bin/bash
+# Toy script to kill a process if it's been running too long.
+
+target_process_name=infiniteloop
+target_process_pid=$(pgrep $target_process_name)
+too_long=10
+exit_code=0
+
+if [ "$target_process_pid" != "" ]; then
+  target_elapsed_time=$(ps -p $target_process_pid -o etimes=)
+  elapsed_time_trimmed=$(echo $target_elapsed_time | sed -e 's/^[ \t]*//')
+  echo "$target_process_name running as process $target_process_pid for $elapsed_time_trimmed seconds."
+  if [ $target_elapsed_time -gt $too_long ]; then
+    echo "$target_process_name has been running more than $too_long seconds, which is too long."
+    kill -9 $target_process_pid
+    echo "$target_process_name not running anymore."
+    exit_code=2
+  else
+    exit_code=1
+  fi
+else
+  echo "$target_process_name not running."
+  exit_code=0
+fi
+exit $exit_code

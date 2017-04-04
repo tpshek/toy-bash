@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "Start the neverending script"
+while true; do 
+  date
+  sleep 3
+done
